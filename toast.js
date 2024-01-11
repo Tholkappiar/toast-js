@@ -19,7 +19,7 @@ class toast{
         this.subTitle = subTitle;
         this.message = message;
         this.options = {
-            'placement': 'top-right'
+            'placement': 'top-left'
         };
 
         this.options = {...this.options, ...options};
@@ -37,18 +37,17 @@ class toast{
             "bottom-center": "bottom-0 start-50 translate-middle-x",
             "bottom-right": "bottom-0 end-0"
         }
-        // console.log( "this is " + (document.getElementById('toast_')+this.options.placement));
         this.domInit();
     }
 
     domInit(){
         this.placement_class = this.placement_vals[this.options.placement];
-        if((document.getElementById('toast-')+this.options.placement).length == 0)
-        document.body.append(
-            `<div id="toast-${this.options.placement}" class="toast-container position-fixed ${this.placement_class}"
-            </div>`
-        )
-
+        if (!document.getElementById("toast-" + this.options.placement)) {
+          const toastvar = document.createElement("div");
+          toastvar.id = "toast-" + this.options.placement;
+          toastvar.className = `toast-container position-fixed ${this.placement_class}`;
+          document.body.append(toastvar);
+        }
     }
 
     show(){
@@ -57,7 +56,7 @@ class toast{
         <div class="toast" id="${this.id}" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
                 <strong class="me-auto">${this.title}</strong>
-                <small class="text-muted">${this.subtitle}</small>
+                <small class="text-muted">${this.subTitle}</small>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body">
@@ -66,30 +65,13 @@ class toast{
         </div>
         `;
 
-
-        $(document.getElementById('toast-'+(this.options.placement))).append(toast_template);
+        // JQuery used here to reduce the lines of code, creating toast_template dynamically in vanialla js needs more 
+        // lines of code. 
+        $('#toast-'+(this.options.placement)).append(toast_template);
         var t = new bootstrap.Toast(document.getElementById(`${this.id}`), this.options);
         $(document.getElementById(`${this.id}`)).on('hidden.bs.toast', function(){
-            // $(`#${this.id}`).remove();
             document.getElementById(this.id).remove();
         });
-        console.log(t);
         t.show();
     }
-
-
-
-
-
 }
-
-
-
-
-
-
-document.write('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">');
-document.write('<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>');
-document.write('<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>');
-
-

@@ -14,7 +14,7 @@ C,15,a[50]),d=n(d,e,f,c,s,21,a[51]),c=n(c,d,e,f,A,6,a[52]),f=n(f,c,d,e,q,10,a[53
 
 
 class toast{
-    constructor(title,subTitle,message,options=undefined){
+    constructor(title,subTitle,message,color="",options=undefined){
         this.title = title;
         this.subTitle = subTitle;
         this.message = message;
@@ -22,8 +22,10 @@ class toast{
             'placement': 'top-left'
         };
 
-        this.options = {...this.options, ...options};
+        this.options.placement = options;
 
+        this.color =color;
+        
         this.id = "toast_"+CryptoJS.MD5(Math.random().toString());
         
         this.placement_vals = {
@@ -37,10 +39,18 @@ class toast{
             "bottom-center": "bottom-0 start-50 translate-middle-x",
             "bottom-right": "bottom-0 end-0"
         }
+
+        this.colors = {
+            "bg-primary": "blue"
+        }
+
         this.domInit();
     }
 
     domInit(){
+
+        // console.log(this.options.placement);
+        
         this.placement_class = this.placement_vals[this.options.placement];
         if (!document.getElementById("toast-" + this.options.placement)) {
           const toastvar = document.createElement("div");
@@ -54,18 +64,18 @@ class toast{
 
         var toast_template = `
         <div class="toast" id="${this.id}" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
+            <div class="toast-header ${this.color}">
                 <strong class="me-auto">${this.title}</strong>
                 <small class="text-muted">${this.subTitle}</small>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="toast-body">
+            <div class="toast-body ${this.color}">
                 ${this.message}
             </div>
         </div>
         `;
 
-        // JQuery used here to reduce the lines of code, creating toast_template dynamically in vanialla js needs more 
+        // JQuery used here to reduce the lines of code, creating toast_template dynamically in Vanilla js needs more 
         // lines of code. 
         $('#toast-'+(this.options.placement)).append(toast_template);
         var t = new bootstrap.Toast(document.getElementById(`${this.id}`), this.options);
